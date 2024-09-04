@@ -13,5 +13,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: login azur
+      run: |
+        docker login judevops.azurecr.io -u ${{secrets.MY_USERNAME}} -p ${{secrets.MY_PASSWORD}}
+       
+
     - name: Print Hello
-      run: echo "Hello, world!"
+      run:
+        docker build -t judevops.azurecr.io/eyad-calculator ./BE
+        docker push judevops.azurecr.io/eyad-calculator
