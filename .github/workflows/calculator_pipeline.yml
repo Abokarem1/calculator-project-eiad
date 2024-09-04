@@ -18,7 +18,7 @@ jobs:
         docker login judevops.azurecr.io -u ${{secrets.USERNAME}} -p ${{secrets.PASSWORD}}
        
 
-    - name: Print Hello
+    - name: build and push
       run: |
         docker build -t judevops.azurecr.io/eyad-calculator ./BE
         docker push judevops.azurecr.io/eyad-calculator
