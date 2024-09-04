@@ -19,6 +19,6 @@ jobs:
        
 
     - name: Print Hello
-      run:
+      run: |
         docker build -t judevops.azurecr.io/eyad-calculator ./BE
         docker push judevops.azurecr.io/eyad-calculator
