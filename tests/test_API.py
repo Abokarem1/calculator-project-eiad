@@ -11,4 +11,4 @@ class TestCalculatorAPI():
         client = Client("http://localhost:5000")
         response = calculate.sync(client = client, body = Calculation(Opertions.ADD, operand1=1, operand2=1))
         assert isinstance(response, ResultResponse)
-        assert response.result == 3
+        assert response.result == 2
