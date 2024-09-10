@@ -13,8 +13,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: reqq
+      run: pip install --no-cache-dir -r requirements.txt
+
     - name: rest API and test
       run: |
+        python BE/calculator.py --rest &
         python -m pytest --junit-xml=report.xml
      
     - name: JUnit Report Action
