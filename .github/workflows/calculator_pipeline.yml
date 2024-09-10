@@ -13,6 +13,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: rest API and test
+      run: |
+        python BE/calculator.py --rest &
+        python -m pytest --junit-xml=report.xml
+     
+    - name: JUnit Report Action
+      uses: mikepenz/action-junit-report@v4.3.1
+      if : success()||failure()
+      with:
+        report_paths : '**/*.xml'
+
     - name: login azur
       run: |
         docker login judevops.azurecr.io -u ${{secrets.USERNAME}} -p ${{secrets.PASSWORD}}
