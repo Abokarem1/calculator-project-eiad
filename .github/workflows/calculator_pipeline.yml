@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - main
+
 permissions:
   checks: write
   id-token: write
   contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,26 +18,35 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: reqq
+    - name: Install Python dependencies
       run: pip install --no-cache-dir -r BE/requirements.txt
 
-    - name: rest API and test
+    - name: Start Selenium Docker Container
       run: |
-        python BE/calculator.py --rest &
-        python -m pytest --junit-xml=report.xml
-     
+        docker run --name selenium -d --add-host host.docker.internal:host-gateway -p 4444:4444 -p 5900:5900 --shm-size="2g" selenium/standalone-chrome:4.2.1-20220531
+        docker ps  # Check if Selenium container is running
+
+    - name: Start Calculator front-end and back-end using Docker Compose
+      run: |
+        docker compose -p webcalculator up -d
+        docker ps  # Check if front-end and back-end containers are running
+
+    - name: Run REST API and Tests
+      run: |
+        python BE/calculator.py --rest &  # Start your calculator API if needed
+        python -m pytest --junit-xml=report.xml  # Run tests
+
     - name: JUnit Report Action
       uses: mikepenz/action-junit-report@v4.3.1
-      if : success()||failure()
+      if: success() || failure()
       with:
-        report_paths : '**/*.xml'
+        report_paths: '**/*.xml'
 
-    - name: login azur
+    - name: Login to Azure
       run: |
         docker login judevops.azurecr.io -u ${{secrets.USERNAME}} -p ${{secrets.PASSWORD}}
-       
 
-    - name: build and push
+    - name: Build and Push Docker Image
       run: |
         docker build -t judevops.azurecr.io/eyad-calculator ./BE
         docker push judevops.azurecr.io/eyad-calculator
