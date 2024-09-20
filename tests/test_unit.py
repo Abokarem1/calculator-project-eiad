@@ -1,6 +1,6 @@
 from BE.calculator_helper import CalculatorHelper
 import pytest
-#from tests.test_api import testApi
+from tests.test_API import TestCalculatorAPI
 
 @pytest.mark.parametrize( "Eyad,expected",[("3 + 3", 6), ("2 + (-4)", -2)])
 def test_eval(Eyad,expected):
@@ -10,7 +10,7 @@ class BaseTestSetupTeardown():
     def test_setup_teardown(self):
         self.calculator = CalculatorHelper()
 
-class TestCalculator(BaseTestSetupTeardown):
+class TestCalculator(BaseTestSetupTeardown, TestCalculatorAPI):
     def test_add(self):
         calculator = CalculatorHelper()
         value = calculator.add(1,1)
