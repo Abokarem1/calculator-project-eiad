@@ -12,7 +12,7 @@ class RegisterPage(PageBase):
             'password1' : Element('//input[@id="password1"]', self),
             'password2' : Element('//input[@id="password2"]', self),
             'register' : Element('//button[@id="register"]', self),
-            #'errormsg' : Element('//dev[@id="errormsg"]', self),
+            'errormsg' : Element('//dev[@id="errormsg"]', self),
         }
 
         self.elements = munchify(page_elements)

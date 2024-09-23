@@ -1,9 +1,9 @@
-
+#import logger
 
 class CalculatorHelper():
     log_properties = {
         'custom_dimensions': {
-            'userId': 'MohamadEyad-Abouselo'
+            'userId': 'eyad'
         }
     }
 
@@ -22,7 +22,7 @@ class CalculatorHelper():
             admin = self.User('admin','test1234')
             self._user_list.append(admin)
             self._is_initialized = True
-           
+           # self.logger = logger.get_logger(__name__)
 
     class User():
         def __init__(self, username, password):
@@ -34,9 +34,8 @@ class CalculatorHelper():
 
     def add(self, a, b):
         #self.logger.debug("test")
-        result =  a + b
-       # self.logger.debug("Adding " + str(a)+ " to "+ str(b)+  "result" + str(result), extra=self.log_properties)
-        return result
+        #self.logger.debug("Adding " + str(a)+ " to "+ str(b), extra=self.log_properties)
+        return a + b
 
     def subtract(self, a, b):
         #self.logger.debug("Subtracting " + str(a)+ " from "+ str(b), extra=self.log_properties)
@@ -46,9 +45,10 @@ class CalculatorHelper():
        # self.logger.debug("Multiplying " + str(a)+ " by "+ str(b), extra=self.log_properties)
         return a * b
 
-    def divide(self, a, b): 
-       # self.logger.debug("Dividing " + str(a)+ " by "+ str(b) , extra=self.log_properties)
-        return a/b
+    def divide(self, a, b):
+        result = a/b 
+        #self.logger.debug("Dividing " + str(a)+ " by "+ str(b) + "result: " + str(result), extra=self.log_properties)
+        return result
 
     def register_user(self, username, password):
         for user in self._user_list:
@@ -56,14 +56,14 @@ class CalculatorHelper():
                 return None
         user = self.User(username, password)
         self._user_list.append(user)
-       # self.logger.debug("Registering user :{user}", extra=self.log_properties)
+        #self.logger.debug("Registering user :{user}", extra=self.log_properties)
         return username
 
     def login(self, username, password):
         for user in self._user_list:
             if(user.username == username and user.password == password):
                 self._current_user = user
-               # self.logger.debug("The user :{user} is logging in", extra=self.log_properties)
+              #  self.logger.debug("The user :{user} is logging in", extra=self.log_properties)
                 return username
         return None
 

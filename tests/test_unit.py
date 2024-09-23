@@ -1,16 +1,16 @@
 from BE.calculator_helper import CalculatorHelper
 import pytest
-from tests.test_API import TestCalculatorAPI
+from tests.test_unit_api import testApi
 
-@pytest.mark.parametrize( "Eyad,expected",[("3 + 3", 6), ("2 + (-4)", -2)])
-def test_eval(Eyad,expected):
-    assert eval(Eyad) == expected
+@pytest.mark.parametrize( "nour,expected",[("3 + 3", 6), ("2 + (-4)", -2)])    
+def test_eval(eyad,expected):
+    assert eval(eyad) == expected
 
 class BaseTestSetupTeardown():
     def test_setup_teardown(self):
         self.calculator = CalculatorHelper()
 
-class TestCalculator(BaseTestSetupTeardown, TestCalculatorAPI):
+class TestCalculator(BaseTestSetupTeardown):
     def test_add(self):
         calculator = CalculatorHelper()
         value = calculator.add(1,1)
@@ -31,3 +31,4 @@ class TestCalculator(BaseTestSetupTeardown, TestCalculatorAPI):
         calculator = CalculatorHelper()
         with pytest.raises(ZeroDivisionError):
             calculator.divide(8,0)
+        

@@ -12,7 +12,7 @@ COPY nginx.conf.template /etc/nginx/nginx.conf.template
 
 # Set the remote server address and Nginx port as environment variables with default values
 ARG REMOTE_SERVER_ADDRESS=http://localhost:5000
-ARG WEB_SERVER_ADDRESS=http://localhost:8080
+ARG WEB_SERVER_ADDRESS=http://host.docker.internal:8080
 ARG NGINX_PORT=8080
 ENV REMOTE_SERVER_ADDRESS=${REMOTE_SERVER_ADDRESS}
 ENV WEB_SERVER_ADDRESS=${WEB_SERVER_ADDRESS}

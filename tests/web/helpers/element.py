@@ -23,16 +23,23 @@ class Element:
 
     @property
     def text(self):
-       
         return self.page.wait.until(EC.presence_of_element_located((By.XPATH, self.locator))).text
-        
-
 
     @property
     def value(self):
         return self.page.wait.until(EC.presence_of_element_located((By.XPATH, self.locator))).get_attribute('value')
     
     @property
-    def new(self):
-        self.page.wait.until(EC.visibility_of_elements_located((By.XPATH, self.locator)))
+    def text_re(self):
+        self.page.wait.until(EC.visibility_of_element_located((By.XPATH,self.locator )))
         return self.page.wait.until(EC.presence_of_element_located((By.XPATH, self.locator))).text
+
+        
+        
+        
+    
+        
+        
+        
+    
+    

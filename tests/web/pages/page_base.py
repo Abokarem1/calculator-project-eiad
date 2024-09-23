@@ -1,4 +1,5 @@
 from selenium.webdriver.support.ui import WebDriverWait
+
 from selenium.common.exceptions import StaleElementReferenceException
 
 class PageBase:

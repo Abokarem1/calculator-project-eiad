@@ -69,3 +69,9 @@ class CalculatorPage(PageBase):
     def history_text(self):
         self.elements.open_history.click()
         return self.elements.history.value
+       
+
+
+
+    
+
