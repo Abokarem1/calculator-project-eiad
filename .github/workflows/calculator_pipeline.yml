@@ -8,7 +8,7 @@ from calculator_client.models.result_response import ResultResponse
 class TestCalcApi ():
     def test_clculate(self):
 
-       url = 'http://localhost:5001/calculate'
+       url = 'http://localhost:5000/calculate'
        payload = {
          "operation": "add",
           "operand1": 1,
@@ -28,13 +28,7 @@ class TestCalcApi ():
       calculation = Calculation(operation=Opertions.ADD, operand1=1, operand2=1)
       response: ResultResponse = calculate.sync(client=client, body=calculation)
       assert response.result == 2
-Bashar Ghabbour — Idag 13:05
-عمر بالله فيك تبعت ال workflow تبع devops lab3
-Amore — Idag 13:06
-قصدك ملف yml
-Bashar Ghabbour — Idag 13:06
-اي
-Amore — Idag 13:07
+
 # This is a basic workflow to help you get started with Actions
 
 name: CI
