@@ -2,7 +2,7 @@ from BE.calculator_helper import CalculatorHelper
 import pytest
 from tests.test_unit_api import testApi
 
-@pytest.mark.parametrize( "nour,expected",[("3 + 3", 6), ("2 + (-4)", -2)])    
+@pytest.mark.parametrize( "eyad,expected",[("3 + 3", 6), ("2 + (-4)", -2)])    
 def test_eval(eyad,expected):
     assert eval(eyad) == expected
 
