@@ -29,10 +29,12 @@ jobs:
       run: |
         docker compose -p webcalculator up -d
         docker ps  # Check if front-end and back-end containers are running
+        
     - name: Run REST API and Tests
       run: |
-        python BE/calculator.py --rest &  # Start your calculator API if needed
-        python -m pytest --junit-xml=report.xml  # Run tests
+        
+        python -m pytest --junit-xml=report.xml  
+        
     - name: JUnit Report Action
       uses: mikepenz/action-junit-report@v4.3.1
       if: success() || failure()
