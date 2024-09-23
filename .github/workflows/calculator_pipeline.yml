@@ -1,105 +1,48 @@
-import requests 
-from calculator_client.client import Client
-from calculator_client.api.actions import calculate 
-from calculator_client.models.calculation import Calculation
-from calculator_client.models.opertions import Opertions
-from calculator_client.models.result_response import ResultResponse
+name: Calculator Pipeline
 
-class TestCalcApi ():
-    def test_clculate(self):
-
-       url = 'http://localhost:5000/calculate'
-       payload = {
-         "operation": "add",
-          "operand1": 1,
-         "operand2": 1
-       }
-       ###s
-       response = requests.post(url, json=payload)
-
-       assert response.status_code == 200
-
-       data = response.json()
-
-       assert data['result'] == 2
-
-    def test_auto_code(self) : 
-      client = Client("http://localhost:5001/")
-      calculation = Calculation(operation=Opertions.ADD, operand1=1, operand2=1)
-      response: ResultResponse = calculate.sync(client=client, body=calculation)
-      assert response.result == 2
-
-# This is a basic workflow to help you get started with Actions
-
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-  
-  
+permissions:
+  checks: write
+  id-token: write
+  contents: read
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-  
-    env:
-     PYTHONPTH: . 
 
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: | 
-         pip install -r BE/requirements.txt
-     
+    - name: Install Python dependencies
+      run: pip install --no-cache-dir -r BE/requirements.txt
 
-      - name: Run tests 
-        run: | 
-          docker run --name selenium -d --add-host host.docker.internal:host-gateway -p 4444:4444 -p 5900:5900 --shm-size="2g" selenium/standalone-chrome:4.2.1-20220531
+    - name: Start Selenium Docker Container
+      run: |
+        docker run --name selenium -d --add-host host.docker.internal:host-gateway -p 4444:4444 -p 5900:5900 --shm-size="2g" selenium/standalone-chrome:4.2.1-20220531
+        docker ps  # Check if Selenium container is running
+    - name: Start Calculator front-end and back-end using Docker Compose
+      run: |
+        docker compose -p webcalculator up -d
+        docker ps  # Check if front-end and back-end containers are running
+    - name: Run REST API and Tests
+      run: |
+        python BE/calculator.py --rest &  # Start your calculator API if needed
+        python -m pytest --junit-xml=report.xml  # Run tests
+    - name: JUnit Report Action
+      uses: mikepenz/action-junit-report@v4.3.1
+      if: success() || failure()
+      with:
+        report_paths: '**/*.xml'
 
-          docker compose -p webcalculator up -d
-
-
-     
-      
-      -  name: Start REST API
-         run: | 
-          python BE/calculator.py --rest &
-          sleep 5
-          python -m pytest --junit-xml=report.xml
-          
-         
-
-      - name: JUnit Report Action
-        uses: mikepenz/action-junit-report@v4.3.1
-        if : success()||failure()
-        with:
-         report_paths : '**/*.xml'
-      
-      - name: Login to Registry
-        uses: docker/login-action@v3
-        with:
-          registry: judevops.azurecr.io
-          username: ${{ secrets.AZURE_USERNAME }}
-          password: ${{ secrets.AZURE_PASSWORD }}  
-      - name: Build Docker image
-        run: docker build -t judevops.azurecr.io/omer_ammo-calculator -f BE/Dockerfile BE
-    
-
-      - name: Push Docker image
-        run: docker push judevops.azurecr.io/omer_ammo-calculator:latest     
-        
+    - name: Login to Azure
+      run: |
+        docker login judevops.azurecr.io -u ${{secrets.USERNAME}} -p ${{secrets.PASSWORD}}
+    - name: Build and Push Docker Image
+      run: |
+        docker build -t judevops.azurecr.io/eyad-calculator ./BE
+        docker push judevops.azurecr.io/eyad-calculator
