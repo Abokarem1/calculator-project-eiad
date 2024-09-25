@@ -6,7 +6,7 @@ from calculator_client.models.opertions import Opertions
 import pytest
 
 
-class testApi():
+class TestApi():
     client = Client("http://localhost:5000/#/actions/calculate")
     def test_api_add(self):
         res = calculate.sync(client=self.client, body=Calculation(operation= Opertions.ADD , operand1=1, operand2=1))
